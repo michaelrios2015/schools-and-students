@@ -8,6 +8,7 @@ const { static } = express;
 const path = require('path');
 
 const app = express();
+app.use(express.json());
 
 app.use('/dist', static(path.join(__dirname, 'dist')));
 
@@ -24,12 +25,22 @@ app.get('/api/schools', async(req, res, next)=> {
 
 app.post('/api/schools', async(req, res, next)=> {
     try {
-      res.send(await School.createRandomSchool());
+      res.status(201).send(await School.create(req.body));
     }
     catch(ex){
       next(ex);
     }
   });
+
+  // app.post('/api/users', async(req, res, next)=> {
+  //   try {
+  //     res.status(201).send(await User.create(req.body));
+  //   }
+  //   catch(ex){
+  //     next(ex);
+  //   }
+  // });
+
 
 app.get('/api/students', async(req, res, next)=> {
     try {
@@ -71,9 +82,9 @@ const Student = conn.define('student', {
 School.hasMany(Student);
 Student.belongsTo(School);
 
-School.createRandomSchool = function(){
-    return this.create({ name: `${Math.random()} - school`})
-}
+// School.createRandomSchool = function(){
+//     return this.create({ name: `${Math.random()} - school`})
+// }
 
 const syncAndSeed = async()=> {
   await conn.sync({ force: true });

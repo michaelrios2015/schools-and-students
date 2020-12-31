@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import { Provider, connect } from 'react-redux';
-import axios from 'axios';
-import store from './store';
+import store, { loaded, loadSchools, loadStudents, setView } from './store';
 import Schools from './schools';
 import Students from './students';
 import Nav from './nav';
@@ -12,51 +11,57 @@ import Nav from './nav';
 class _App extends Component{
   constructor(){
     super();
-    this.state = { view: ''};
   }
   async componentDidMount(){
-    
+  
+    this.props.bootstrap();
     window.addEventListener('hashchange', ()=> {
-        this.setState({ view: window.location.hash.slice(1)});
+        this.props.setView(window.location.hash.slice(1));
     })
-    this.setState({ view: window.location.hash.slice(1)});
-
-    const schools = (await axios.get('/api/schools')).data;
-    
-    store.dispatch({
-        type: 'LOAD_SCHOOLS',
-        schools
-    })
-    const students = (await axios.get('/api/students')).data;
-    
-    store.dispatch({
-        type: 'LOAD_STUDENTS',
-        students
-    })
-    
-    store.dispatch({
-        type: 'LOADED',
-    })
-
-
+    this.props.setView(window.location.hash.slice(1));
   }
 
   render(){
-    const { view } = this.state;
-    const { loading } = this.props;
+    const { loading, view } = this.props;
+    // console.log(view);
+    
     if(loading){
       return '....loading';
     }
     return (
-        <div>
+          <div>
             <Nav />
-            { view === 'schools' ? <Schools /> : '' }
-            { view === 'students' ? <Students /> : '' }
-      </div>
-    );
+            { view === 'schools' && <Schools /> }
+            { view === 'students' && <Students />}
+          </div>
+        );
   }
 }
 
-const App = connect()(_App);
+const mapStateToProps = ({loading, view}) => {
+  return {
+    loading,
+    view
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    bootstrap: ()=> {
+      dispatch(loadSchools());
+      
+      dispatch(loadStudents());
+      
+      dispatch(loaded());
+    },
+    setView: function(view) {
+      dispatch(setView(view));
+    }
+  };
+}
+
+
+
+const App = connect(mapStateToProps, mapDispatchToProps)(_App);
 
 render(<Provider store= {store}><App /></Provider>, document.querySelector('#root'));

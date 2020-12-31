@@ -1,32 +1,35 @@
-import React, { Component } from 'react';
-import store from './store';
+import React from 'react';
 import axios from 'axios';
+import { createSchool } from './store';
 import { connect } from 'react-redux';
 
-const createSchool = async() => {
-    const school = (await axios.post('/api/schools')).data
-    store.dispatch({
-        type: 'CREATE_SCHOOL',
-        school
-    });
-}
-
-const Nav = ({ schools, students }) => {
-
+const Nav = ({ schoolsL, studentsL, createSchool }) => {
     return (
             <nav>
                 <a href='#'>Home</a>
-                <a href='#schools'>Schools ({schools.length}) </a>
-                <a href='#students'>Students ({students.length})</a>
-                <button onClick={ createSchool }> Create School </button>
+                <a href='#schools'>Schools ({schoolsL}) </a>
+                <a href='#students'>Students ({studentsL})</a>
+                <button onClick={()=> createSchool(Math.random()) }> Create School </button>
             </nav>
         );
 }
 
 //should learn the difference between default and regular export
 
-const mapStateToProps = (state)=> {
-    return state;
+const mapStateToProps = ({ schools, students })=> {
+    return {
+        schoolsL: schools.length,
+        studentsL: students.length
+    }
 };
 
-export default connect(mapStateToProps)(Nav);
+const mapDispatchToProps = (dispatch)=> {
+    return {
+        createSchool: (name) => {
+            dispatch(createSchool(name));
+        }
+    }
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Nav);
