@@ -2,12 +2,13 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import axios from 'axios';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
+import school from './school';
 
 const LOAD_SCHOOLS = 'LOAD_SCHOOLS';
 const LOAD_STUDENTS = 'LOAD_STUDENTS';
 const CREATE_SCHOOL = 'CREATE_SCHOOL';
+const DESTROY_SCHOOL = 'DESTROY_SCHOOL';
 const LOADED = 'LOADED';
-const SET_VIEW = 'SET_VIEW';
 
 const schoolsReducer = (state = [], action) =>{
     if (action.type === LOAD_SCHOOLS){
@@ -16,19 +17,15 @@ const schoolsReducer = (state = [], action) =>{
     if (action.type === CREATE_SCHOOL){
         state = [...state, action.school]
     }
+    if (action.type === DESTROY_SCHOOL){
+        state = state.filter(school => school.id !== action.school.id);
+    }
     return state;
 }
 
 const studenstReducer = (state = [], action) => {
     if (action.type === LOAD_STUDENTS){
         state = action.students
-    }
-    return state;
-}
-
-const viewReducer = (state = 'schools', action) => {
-    if (action.type === SET_VIEW){
-        state = action.view 
     }
     return state;
 }
@@ -43,8 +40,7 @@ const loadReducer = (state = true, action) => {
 const reducer = combineReducers({
     schools: schoolsReducer,
     students: studenstReducer,
-    loading: loadReducer,
-    view: viewReducer
+    loading: loadReducer
 })
 
 const store = createStore(reducer, applyMiddleware(thunk, logger));
@@ -90,19 +86,25 @@ const _createSchool = (school) =>{
     };
 };
 
-const createSchool = (name)=>{
+const createSchool = (name, history)=>{
     return async(dispatch)=>{
         const school = (await axios.post('/api/schools', { name })).data
         dispatch(_createSchool(school))
+        //don't really understand but very cool :)
+        history.push(`/schools/${school.id}`)
     }
 }
 
-const setView = (view) =>{
-    return {
-        type: SET_VIEW,
-        view
-    };
-};
+const _destroySchool = school =>({ type: DESTROY_SCHOOL, school});
+
+const destroySchool = (school, history)=>{
+    return async(dispatch)=>{
+        await axios.delete(`/api/schools/${school.id}`)
+        dispatch(_destroySchool(school))
+        //don't really understand but very cool :)
+        history.push('/schools')
+    }
+}
 
 export default store;
-export { loaded, loadSchools, loadStudents, createSchool, setView};
+export { loaded, loadSchools, loadStudents, createSchool, destroySchool};

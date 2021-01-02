@@ -32,19 +32,30 @@ app.post('/api/schools', async(req, res, next)=> {
     }
   });
 
-  // app.post('/api/users', async(req, res, next)=> {
-  //   try {
-  //     res.status(201).send(await User.create(req.body));
-  //   }
-  //   catch(ex){
-  //     next(ex);
-  //   }
-  // });
+  app.delete('/api/schools/:id', async(req, res, next)=> {
+    try {
+      const school = await School.findByPk(req.params.id);
+      await school.destroy();
+      res.sendStatus(204);
+    }  
+    catch(ex){
+      next(ex);
+    }
+  });
 
 
 app.get('/api/students', async(req, res, next)=> {
     try {
       res.send(await Student.findAll({include: School}));
+    }
+    catch(ex){
+      next(ex);
+    }
+  });
+
+  app.post('/api/students', async(req, res, next)=> {
+    try {
+      res.status(201).send(await Student.create(req.body));
     }
     catch(ex){
       next(ex);
