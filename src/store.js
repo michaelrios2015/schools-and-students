@@ -8,6 +8,7 @@ const LOAD_SCHOOLS = 'LOAD_SCHOOLS';
 const LOAD_STUDENTS = 'LOAD_STUDENTS';
 const CREATE_SCHOOL = 'CREATE_SCHOOL';
 const DESTROY_SCHOOL = 'DESTROY_SCHOOL';
+const REMOVE_SCHOOL = 'REMOVE_SCHOOL'
 const LOADED = 'LOADED';
 
 const schoolsReducer = (state = [], action) =>{
@@ -26,6 +27,18 @@ const schoolsReducer = (state = [], action) =>{
 const studenstReducer = (state = [], action) => {
     if (action.type === LOAD_STUDENTS){
         state = action.students
+    }
+    if (action.type === REMOVE_SCHOOL){
+        state = state.map((student) => { 
+            //console.log(student.school);        
+             if (student.school ){
+                console.log(student.school.name);
+                    if (student.school.name === action.school.name){
+                    student.school = null;
+         } 
+        }
+        return student;
+    })
     }
     return state;
 }
@@ -106,5 +119,7 @@ const destroySchool = (school, history)=>{
     }
 }
 
+const takeOutSchoolFromStudent = school =>({ type: REMOVE_SCHOOL, school});
+
 export default store;
-export { loaded, loadSchools, loadStudents, createSchool, destroySchool};
+export { loaded, loadSchools, loadStudents, createSchool, destroySchool, takeOutSchoolFromStudent};
