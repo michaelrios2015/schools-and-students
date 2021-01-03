@@ -2,13 +2,13 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import axios from 'axios';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
-import school from './school';
 
 const LOAD_SCHOOLS = 'LOAD_SCHOOLS';
 const LOAD_STUDENTS = 'LOAD_STUDENTS';
 const CREATE_SCHOOL = 'CREATE_SCHOOL';
 const DESTROY_SCHOOL = 'DESTROY_SCHOOL';
-const REMOVE_SCHOOL = 'REMOVE_SCHOOL'
+const REMOVE_SCHOOL = 'REMOVE_SCHOOL';
+const UPDATE_SCHOOL = 'UPDATE_SCHOOL'
 const LOADED = 'LOADED';
 
 const schoolsReducer = (state = [], action) =>{
@@ -21,6 +21,14 @@ const schoolsReducer = (state = [], action) =>{
     if (action.type === DESTROY_SCHOOL){
         state = state.filter(school => school.id !== action.school.id);
     }
+    if (action.type === UPDATE_SCHOOL){
+        // state = state.map(school => console.log(school));
+        state = state.map(school => school.id !== action.school.id ? school.name : action.school.name);
+        console.log('STATE');
+        console.log(state);
+        //console.log('action.school');
+        //console.log(action.school.data);
+    }
     return state;
 }
 
@@ -28,6 +36,7 @@ const studenstReducer = (state = [], action) => {
     if (action.type === LOAD_STUDENTS){
         state = action.students
     }
+    //BAMO!! SEEMS TO WORK!!
     if (action.type === REMOVE_SCHOOL){
         state = state.map((student) => { 
             //console.log(student.school);        
@@ -101,8 +110,8 @@ const _createSchool = (school) =>{
 
 const createSchool = (name, history)=>{
     return async(dispatch)=>{
-        const school = (await axios.post('/api/schools', { name })).data
-        dispatch(_createSchool(school))
+        const school = (await axios.post('/api/schools', { name })).data;
+        dispatch(_createSchool(school));
         //don't really understand but very cool :)
         history.push(`/schools/${school.id}`)
     }
@@ -119,7 +128,19 @@ const destroySchool = (school, history)=>{
     }
 }
 
+const _updateSchool = school =>({ type: UPDATE_SCHOOL, school});
+
+const updateSchool = (id, name, history)=>{
+    return async(dispatch)=>{
+        const school = (await axios.put(`/api/schools/${id}`, { name })).data;
+        dispatch(_updateSchool(school));
+        //don't really understand but very cool :)
+        // console.log(school);
+        history.push('/schools');
+    }
+}
+
 const takeOutSchoolFromStudent = school =>({ type: REMOVE_SCHOOL, school});
 
 export default store;
-export { loaded, loadSchools, loadStudents, createSchool, destroySchool, takeOutSchoolFromStudent};
+export { loaded, loadSchools, loadStudents, createSchool, destroySchool, updateSchool, takeOutSchoolFromStudent};

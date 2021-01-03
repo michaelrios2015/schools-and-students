@@ -1,15 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { destroySchool, loadStudents, takeOutSchoolFromStudent } from './store';
 
 const School = ({ school, destroy }) =>{
     if(!school.id){
-        return null;
+        return '...loading school';
     }
     return(
         <div>
             { school.name } details to follow
-            <button onClick={()=>destroy(school)}>Delete</button> 
+            <br />
+            <button onClick={()=>destroy(school)}>Delete</button>
+            <br />
+            <Link to={`/schools/${school.id}/update`}>Update</Link>
         </div>
 
         )
@@ -22,7 +26,7 @@ export default connect(
         const school = state.schools.find(school => school.id === otherProps.match.params.id * 1) || {};
         return {
             school
-        };
+            };
         },
         (dispatch, { history })=> {
             return {

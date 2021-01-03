@@ -12,7 +12,8 @@ const Nav = ({ schoolsL, studentsL, createSchool, location: { pathname }}) => {
                 <Link to = '/' className= { pathname === '/' ? 'selected': ''}>Home</Link>
                 <Link to = '/schools' className= { pathname === '/schools' ? 'selected': ''}>Schools ({schoolsL}) </Link>
                 <Link to = '/students' className= { pathname === '/students' ? 'selected': ''}>Students ({studentsL})</Link>
-                <button onClick={()=> createSchool(faker.name.firstName()) }> Create School </button>
+                <Link to = '/schools/create' className= { pathname === '/schools/creates' ? 'selected': ''}>Create a School</Link>
+                {/* <button onClick={()=> createSchool(faker.name.firstName()) }> Create School </button> */}
             </nav>
         );
 }

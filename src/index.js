@@ -2,11 +2,14 @@ import React, { Component } from 'react';
 import { render } from 'react-dom';
 import { Provider, connect } from 'react-redux';
 import store, { loaded, loadSchools, loadStudents } from './store';
-import Schools from './schools';
-import School from './school';
-import Students from './students';
-import Nav from './nav';
-import { HashRouter as Router, Route, Link } from 'react-router-dom';
+import { Switch, HashRouter as Router, Route, Link } from 'react-router-dom';
+
+import Schools from './Schools';
+import CreateSchool from './CreateSchool';
+import School from './School';
+import Students from './Students';
+import Nav from './Nav';
+import UpdateSchool from './UpdateSchool';
 
 
 const Home = () => {
@@ -33,11 +36,15 @@ class _App extends Component{
     return (
           <Router>
             <div>
-              <Route component = {Nav} />
-              <Route component={Home} path = '/' exact />
-              <Route component={Schools} path = '/schools' exact />
-              <Route component={ School } path = '/schools/:id' />
-              <Route component={Students} path = '/students' />
+              <Route component = { Nav } />
+              <Route component={ Home } path = '/' exact />
+              <Route component={ Schools } path = '/schools' exact />
+              <Switch>
+                <Route component={ CreateSchool } path = '/schools/create' />
+                <Route component={ School } path = '/schools/:id' exact/>
+              </Switch>
+              <Route component={ UpdateSchool} path = '/schools/:id/update' />
+              <Route component={ Students } path = '/students' />
             </div>
           </Router>
         );

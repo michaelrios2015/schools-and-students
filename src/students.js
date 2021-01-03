@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 const Students = ( {students} ) => {
-    console.log(students);
+    // console.log(students);
     return(
         <ul>
         {  

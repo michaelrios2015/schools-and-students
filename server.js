@@ -32,7 +32,7 @@ app.post('/api/schools', async(req, res, next)=> {
     }
   });
 
-  app.delete('/api/schools/:id', async(req, res, next)=> {
+app.delete('/api/schools/:id', async(req, res, next)=> {
     try {
       const school = await School.findByPk(req.params.id);
       await school.destroy();
@@ -41,7 +41,17 @@ app.post('/api/schools', async(req, res, next)=> {
     catch(ex){
       next(ex);
     }
-  });
+});
+
+app.put('/api/schools/:id', async(req, res, next)=> {
+  try {
+    const school = await School.findByPk(req.params.id);
+    res.send(await school.update(req.body));
+  }  
+  catch(ex){
+    next(ex);
+  }
+});
 
 
 app.get('/api/students', async(req, res, next)=> {
@@ -51,16 +61,20 @@ app.get('/api/students', async(req, res, next)=> {
     catch(ex){
       next(ex);
     }
-  });
+});
 
-  app.post('/api/students', async(req, res, next)=> {
+app.post('/api/students', async(req, res, next)=> {
     try {
       res.status(201).send(await Student.create(req.body));
     }
     catch(ex){
       next(ex);
     }
-  });
+});
+
+app.use((err, req, res, next)=>{
+  res.status(500).send({ error:err });
+});
 
 // not sure if this gets it own file 
 
@@ -83,7 +97,13 @@ const { STRING } = Sequelize;
 const conn = new Sequelize(process.env.DATABASE_URL || 'postgres://postgres:JerryPine@localhost/acme_db');
 
 const School = conn.define('school', {
-  name: STRING 
+  name: {
+    type: STRING,
+    unique: true,
+    validate: {
+      notEmpty: true
+    }
+  } 
 });
 
 const Student = conn.define('student', {
