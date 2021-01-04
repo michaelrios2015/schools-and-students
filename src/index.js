@@ -2,15 +2,19 @@ import React, { Component } from 'react';
 import { render } from 'react-dom';
 import { Provider, connect } from 'react-redux';
 import store, { loaded, loadSchools, loadStudents } from './store';
-import { Switch, HashRouter as Router, Route, Link } from 'react-router-dom';
+import { Switch, HashRouter as Router, Route } from 'react-router-dom';
+
+import Nav from './Nav';
 
 import Schools from './Schools';
-import CreateSchool from './CreateSchool';
 import School from './School';
-import Students from './Students';
-import Nav from './Nav';
+import CreateSchool from './CreateSchool';
 import UpdateSchool from './UpdateSchool';
 
+import Students from './Students';
+import Student from './Student';
+import CreateStudent from './CreateStudent';
+import UpdateStudent from './UpdateStudent';
 
 const Home = () => {
   return (
@@ -38,13 +42,20 @@ class _App extends Component{
             <div>
               <Route component = { Nav } />
               <Route component={ Home } path = '/' exact />
+
               <Route component={ Schools } path = '/schools' exact />
               <Switch>
                 <Route component={ CreateSchool } path = '/schools/create' />
                 <Route component={ School } path = '/schools/:id' exact/>
               </Switch>
               <Route component={ UpdateSchool} path = '/schools/:id/update' />
-              <Route component={ Students } path = '/students' />
+              
+              <Route component={ Students } path = '/students' exact/>
+              <Switch>
+                <Route component={ CreateStudent } path = '/students/create' />
+                <Route component={ Student } path = '/students/:id' exact/>
+              </Switch>
+              <Route component={ UpdateStudent } path = '/students/:id/update'/>
             </div>
           </Router>
         );

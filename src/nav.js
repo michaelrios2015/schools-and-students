@@ -3,7 +3,7 @@ import axios from 'axios';
 import { createSchool, loadStudents } from './store';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import faker from 'faker';
+
 
 const Nav = ({ schoolsL, studentsL, createSchool, location: { pathname }}) => {
     return (
@@ -12,8 +12,8 @@ const Nav = ({ schoolsL, studentsL, createSchool, location: { pathname }}) => {
                 <Link to = '/' className= { pathname === '/' ? 'selected': ''}>Home</Link>
                 <Link to = '/schools' className= { pathname === '/schools' ? 'selected': ''}>Schools ({schoolsL}) </Link>
                 <Link to = '/students' className= { pathname === '/students' ? 'selected': ''}>Students ({studentsL})</Link>
-                <Link to = '/schools/create' className= { pathname === '/schools/creates' ? 'selected': ''}>Create a School</Link>
-                {/* <button onClick={()=> createSchool(faker.name.firstName()) }> Create School </button> */}
+                <Link to = '/schools/create' className= { pathname === '/schools/create' ? 'selected': ''}>Create a School</Link>
+                <Link to = '/students/create' className= { pathname === '/students/create' ? 'selected': ''}>Create a Student</Link>
             </nav>
         );
 }

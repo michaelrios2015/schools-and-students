@@ -14,6 +14,7 @@ app.use('/dist', static(path.join(__dirname, 'dist')));
 
 app.get('/', (req, res, next)=> res.sendFile(path.join(__dirname, 'index.html')));
 
+//gets all schools
 app.get('/api/schools', async(req, res, next)=> {
   try {
     res.send(await School.findAll({include: Student}));
@@ -23,6 +24,7 @@ app.get('/api/schools', async(req, res, next)=> {
   }
 });
 
+// creates school
 app.post('/api/schools', async(req, res, next)=> {
     try {
       res.status(201).send(await School.create(req.body));
@@ -32,6 +34,7 @@ app.post('/api/schools', async(req, res, next)=> {
     }
   });
 
+//deletes school 
 app.delete('/api/schools/:id', async(req, res, next)=> {
     try {
       const school = await School.findByPk(req.params.id);
@@ -43,6 +46,7 @@ app.delete('/api/schools/:id', async(req, res, next)=> {
     }
 });
 
+//Update school
 app.put('/api/schools/:id', async(req, res, next)=> {
   try {
     const school = await School.findByPk(req.params.id);
@@ -53,7 +57,7 @@ app.put('/api/schools/:id', async(req, res, next)=> {
   }
 });
 
-
+//Gets all students
 app.get('/api/students', async(req, res, next)=> {
     try {
       res.send(await Student.findAll({include: School}));
@@ -63,6 +67,7 @@ app.get('/api/students', async(req, res, next)=> {
     }
 });
 
+//Create student
 app.post('/api/students', async(req, res, next)=> {
     try {
       res.status(201).send(await Student.create(req.body));
@@ -72,6 +77,31 @@ app.post('/api/students', async(req, res, next)=> {
     }
 });
 
+//delete student
+app.delete('/api/students/:id', async(req, res, next)=> {
+  try {
+    const student = await Student.findByPk(req.params.id);
+    await student.destroy();
+    res.sendStatus(204);
+  }  
+  catch(ex){
+    next(ex);
+  }
+});
+
+//Update student
+app.put('/api/students/:id', async(req, res, next)=> {
+  try {
+    const student = await Student.findByPk(req.params.id);
+    res.send(await student.update(req.body));
+  }  
+  catch(ex){
+    next(ex);
+  }
+});
+
+
+//final error catcher 
 app.use((err, req, res, next)=>{
   res.status(500).send({ error:err });
 });

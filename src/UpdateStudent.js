@@ -1,22 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { loadStudents, updateSchool, loadSchools } from './store';
+import { updateStudent } from './store';
 
-class UpdateSchool extends Component{
+class UpdateStudent extends Component{
     constructor(props){
         super(props);
         this.state = {
-            name: this.props.school.id ? this.props.school.name : '',
+            name: this.props.student.id ? this.props.student.name : '',
             error: ''
         };
-        console.log(this.props.school);
+        console.log(this.props.student);
         this.onChange = this.onChange.bind(this);
         this.onSave = this.onSave.bind(this);
     }
     componentDidUpdate(prevProps){
         //mostly get it
-        if (!prevProps.school.id && this.props.school.id){
-            this.setState({ name: this.props.school.name });
+        if (!prevProps.student.id && this.props.student.id){
+            this.setState({ name: this.props.student.name });
             console.log(this.props);
         }
     }
@@ -28,7 +28,7 @@ class UpdateSchool extends Component{
     async onSave(ev){
         ev.preventDefault();
         try {
-            await this.props.update(this.props.school.id, this.state.name);
+            await this.props.update(this.props.student.id, this.state.name);
         }
         catch(ex){
             console.log(ex);
@@ -54,19 +54,16 @@ class UpdateSchool extends Component{
 
 export default connect(
     (state, otherProps)=> {
-        const school = state.schools.find(school => school.id === otherProps.match.params.id * 1) || {};
+        const student = state.students.find(student => student.id === otherProps.match.params.id * 1) || {};
         return {
-            school
+            student
         };
     },
     (dispatch, { history })=> {
         return {
             update: (id, name)=> {
-                dispatch(updateSchool(id, name, history));
-                //not sure why this does not reload students need a way to update thw school name 
-                //in school
-                // dispatch(loadStudents());
+                dispatch(updateStudent(id, name, history));
             }
         }
     }
-)(UpdateSchool);
+)(UpdateStudent);
