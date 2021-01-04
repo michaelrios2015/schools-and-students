@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { loadStudents, updateSchool, loadSchools } from './store';
+import { updateSchool } from './store';
 
 class UpdateSchool extends Component{
     constructor(props){
@@ -63,9 +63,6 @@ export default connect(
         return {
             update: (id, name)=> {
                 dispatch(updateSchool(id, name, history));
-                //not sure why this does not reload students need a way to update thw school name 
-                //in school
-                // dispatch(loadStudents());
             }
         }
     }

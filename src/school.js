@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { destroySchool, loadStudents, takeOutSchoolFromStudent } from './store';
+import { destroySchool, takeOutSchoolFromStudent } from './store';
 
 const School = ({ school, destroy }) =>{
     if(!school.id){
@@ -9,7 +9,7 @@ const School = ({ school, destroy }) =>{
     }
     return(
         <div>
-            { school.name } details to follow
+            <h2>{ school.name } </h2>
             <br />
             <button onClick={()=>destroy(school)}>Delete</button>
             <br />
