@@ -63,7 +63,8 @@ export default connect(
         return {
             update: (id, name)=> {
                 dispatch(updateSchool(id, name, history));
-                dispatch(loadSchools());
+                //not sure why this does not reload students need a way to update thw school name 
+                //in school
                 dispatch(loadStudents());
             }
         }

@@ -6,6 +6,7 @@ import logger from 'redux-logger';
 const LOAD_SCHOOLS = 'LOAD_SCHOOLS';
 const LOAD_STUDENTS = 'LOAD_STUDENTS';
 const CREATE_SCHOOL = 'CREATE_SCHOOL';
+const UPDATE_STUDENTS_SCHOOL_NAME = 'UPDATE_STUDENTS_SCHOOL_NAME';
 const DESTROY_SCHOOL = 'DESTROY_SCHOOL';
 const REMOVE_SCHOOL = 'REMOVE_SCHOOL';
 const UPDATE_SCHOOL = 'UPDATE_SCHOOL'
@@ -23,9 +24,15 @@ const schoolsReducer = (state = [], action) =>{
     }
     if (action.type === UPDATE_SCHOOL){
         // state = state.map(school => console.log(school));
-        state = state.map(school => school.id !== action.school.id ? school.name : action.school.name);
-        console.log('STATE');
-        console.log(state);
+        state = state.map((school) => { if (school.id !== action.school.id){
+                                            return school 
+                                            } else {
+                                                school.name =  action.school.name;
+                                                console.log(school);
+                                                return school
+                                            }});
+        // console.log('STATE');
+        // console.log(state);
         //console.log('action.school');
         //console.log(action.school.data);
     }
@@ -48,6 +55,17 @@ const studenstReducer = (state = [], action) => {
         }
         return student;
     })
+    }
+    if (action.type === UPDATE_STUDENTS_SCHOOL_NAME){
+        state = state.map((student) =>{
+            if (student.school){
+                console.log(student.school.name);
+                    if (student.school.id === action.school.id){
+                    student.school.name = action.school.name;
+         } 
+        }
+        return student;
+        })
     }
     return state;
 }
@@ -101,6 +119,13 @@ const loadStudents = () =>{
     }
 };
 
+const _updateStudentsSchoolName = (school) =>{
+    return {
+        type: UPDATE_STUDENTS_SCHOOL_NAME,
+        school
+    };
+};
+
 const _createSchool = (school) =>{
     return {
         type: CREATE_SCHOOL,
@@ -134,6 +159,10 @@ const updateSchool = (id, name, history)=>{
     return async(dispatch)=>{
         const school = (await axios.put(`/api/schools/${id}`, { name })).data;
         dispatch(_updateSchool(school));
+        // so this is cheating but works 
+        dispatch(loadStudents());
+        //IT WORKS!!!
+        //dispatch(_updateStudentsSchoolName(school))
         //don't really understand but very cool :)
         // console.log(school);
         history.push('/schools');
