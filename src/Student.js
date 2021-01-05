@@ -9,7 +9,8 @@ const Student = ({ student, destroy }) =>{
     }
     return(
         <div>
-            { student.name } details to follow
+            <h2>{ student.name } </h2>
+            {student.school ? <Link to ={`/schools/${student.school.id}`}>{student.school.name}</Link> : 'NOT ENROLLED' }
             <br />
             <button onClick={()=>destroy(student)}>Delete</button>
             <br />

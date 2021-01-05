@@ -11,8 +11,10 @@ const Students = ( {students} ) => {
             return (
             <li key={ student.id }>
                 <Link to={`/students/${ student.id }`}>
-                { student.name } - ({ student.school ? student.school.name : "no school" })
+                { student.name } 
                 </Link>
+                ------------------({ student.school ? <Link to ={`/schools/${student.school.id}`}>{student.school.name}</Link> : "no school" })
+                
             </li>
             );
         })

@@ -3,13 +3,29 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { destroySchool, takeOutSchoolFromStudent } from './store';
 
+
 const School = ({ school, destroy }) =>{
+    console.log(school.students);
     if(!school.id){
         return '...loading school';
     }
     return(
         <div>
+            <header>
             <h2>{ school.name } </h2>
+            students
+            </header>
+            <ul>
+            { school.students.map( student => { 
+                return (
+                    <li key={ student.id} >
+                       <Link to ={`/students/${student.id}`}>{student.name}</Link>
+                    </li>
+                );    
+            }) 
+                
+            }
+            </ul>    
             <br />
             <button onClick={()=>destroy(school)}>Delete</button>
             <br />

@@ -10,13 +10,18 @@ const CREATE_STUDENT = 'CREATE_STUDENT';
 const CREATE_SCHOOL = 'CREATE_SCHOOL';
 const DESTROY_STUDENT = 'DESTROY_STUDENT';
 const UPDATE_STUDENT = 'UPDATE_STUDENT';
+
 const REMOVE_STUDENT_FROM_SCHOOL = 'REMOVE_STUDENT_FROM_SCHOOL';
 const UPDATE_STUDENTS_SCHOOL_NAME = 'UPDATE_STUDENTS_SCHOOL_NAME';
+const UPDATE_STUDENT_NAME_IN_SCHOOL = 'UPDATE_STUDENT_NAME_IN_SCHOOL';
 
 const LOAD_SCHOOLS = 'LOAD_SCHOOLS';
 const DESTROY_SCHOOL = 'DESTROY_SCHOOL';
 const REMOVE_SCHOOL = 'REMOVE_SCHOOL';
 const UPDATE_SCHOOL = 'UPDATE_SCHOOL'
+
+
+//School Reducer should probably seperate out ************************
 
 const schoolsReducer = (state = [], action) =>{
     if (action.type === LOAD_SCHOOLS){
@@ -29,35 +34,45 @@ const schoolsReducer = (state = [], action) =>{
         state = state.filter(school => school.id !== action.school.id);
     }
     if (action.type === UPDATE_SCHOOL){
-        state = state.map((school) => { if (school.id !== action.school.id){
-                                            return school 
-                                            } else {
-                                                school.name =  action.school.name;
-                                                console.log(school);
-                                                return school
-                                            }});
+        state = state.map((school) => { 
+            if (school.id !== action.school.id){
+                return school 
+            } else {
+                school.name =  action.school.name;
+                return school
+            }});
     }
     if (action.type === REMOVE_STUDENT_FROM_SCHOOL){
         state = state.map((school) => { 
-            //console.log(student.school);        
-             if (school.students.length > 0 ){
-                console.log('school.students');
-                console.log(school.students);
-                console.log(action.student.id);
+             if (school.id === action.student.schoolId){
                 school.students = school.students.filter((student)=>{ 
-                    console.log('in filter');
-                    console.log(typeof student.id);
                     if (student.id !== action.student.id){
-                        console.log('in filter if statement');
                         return student;
                     }})
-                console.log(school.students);      
+                console.log(school.students);
          } 
+         return school;
+        })   
+    }
+    if (action.type === UPDATE_STUDENT_NAME_IN_SCHOOL){
+        state = state.map((school) => { 
+             if (school.id === action.student.schoolId){
+                school.students = school.students.map((student)=>{ 
+                    if (student.id !== action.student.id){
+                        student.name = action.student.name;
+                    }
+                    return student;
+                })
+                    console.log(school.students);
+                    
+                             } 
          return school;
         })   
     }
     return state;
 }
+
+//Student Reducer should probably seperate out ************************
 
 const studenstReducer = (state = [], action) => {
     if (action.type === LOAD_STUDENTS){
@@ -105,13 +120,14 @@ const studenstReducer = (state = [], action) => {
     }
     return state;
 }
-
 const loadReducer = (state = true, action) => {
     if (action.type === LOADED){
         state = false 
     }
     return state;
 }
+
+// ********************************************************************
 
 const reducer = combineReducers({
     schools: schoolsReducer,
@@ -120,6 +136,8 @@ const reducer = combineReducers({
 })
 
 const store = createStore(reducer, applyMiddleware(thunk, logger));
+
+// ********************************************************************
 
 const loaded = () =>{
     return {
@@ -167,6 +185,8 @@ const destroyStudent = (student, history)=>{
     return async(dispatch)=>{
         await axios.delete(`/api/students/${student.id}`)
         dispatch(_destroyStudent(student))
+        //could probably be an axios statement in here to get school then send that to another
+        //thunk thing
         dispatch(_removeStudentFromSchool(student))
         history.push('/students')
     }
@@ -181,10 +201,21 @@ const _updateStudentsSchoolName = (school) =>{
 
 const _updateStudent = student =>({ type: UPDATE_STUDENT, student});
 
+const _updateStudentNameInSchool = student =>({ type: UPDATE_STUDENT_NAME_IN_SCHOOL, student});
+
+
 const updateStudent = (id, name, history)=>{
     return async(dispatch)=>{
         const student = (await axios.put(`/api/students/${id}`, { name })).data;
         dispatch(_updateStudent(student));
+        //this works but is presumably cheating because it relaods all of schools which seems wasteful
+        //dispatch(loadSchools())
+        // console.log(student);
+        // if (student.schoolId){
+        //     const school = (await axios.get(`/api/schools/${student.schoolId}`)).data;
+        //     console.log(school)
+        // }
+        dispatch(_updateStudentNameInSchool(student));
         history.push('/students');
     }
 }

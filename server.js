@@ -24,6 +24,15 @@ app.get('/api/schools', async(req, res, next)=> {
   }
 });
 
+app.get('/api/schools/:id', async(req, res, next)=> {
+  try {
+    res.send(await School.findByPk((req.params.id)));
+  }
+  catch(ex){
+    next(ex);
+  }
+});
+
 // creates school
 app.post('/api/schools', async(req, res, next)=> {
     try {
