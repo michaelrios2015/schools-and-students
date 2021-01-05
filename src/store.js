@@ -54,6 +54,7 @@ const schoolsReducer = (state = [], action) =>{
          return school;
         })   
     }
+    // I assume something like this is normal can definetely be written better
     if (action.type === UPDATE_STUDENT_NAME_IN_SCHOOL){
         state = state.map((school) => { 
              if (school.id === action.student.schoolId){
@@ -63,9 +64,7 @@ const schoolsReducer = (state = [], action) =>{
                     }
                     return student;
                 })
-                    console.log(school.students);
-                    
-                             } 
+         } 
          return school;
         })   
     }
