@@ -9,14 +9,20 @@ const School = ({ school, destroy }) =>{
     if(!school.id){
         return '...loading school';
     }
+    if(!school.students){
+        school.students = [];
+    }
     return(
         <div>
             <header>
+            <h1> SCHOOL </h1>
             <h2>{ school.name } </h2>
             students
             </header>
             <ul>
-            { school.students.map( student => { 
+            {/* there should be some east logic to say no students
+            not sure how to format  */}
+            {school.students.map( student => { 
                 return (
                     <li key={ student.id} >
                        <Link to ={`/students/${student.id}`}>{student.name}</Link>
@@ -52,7 +58,7 @@ export default connect(
                     //erased students
                     // dispatch(loadStudents());
                     //THIS IS HOW IT'S SUPPOSED TO BE DONE I THINK
-                    dispatch(takeOutSchoolFromStudent(school));
+                    //dispatch(takeOutSchoolFromStudent(school));
                 }
               
             };

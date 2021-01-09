@@ -24,14 +24,25 @@ app.get('/api/schools', async(req, res, next)=> {
   }
 });
 
+//get a school
 app.get('/api/schools/:id', async(req, res, next)=> {
   try {
-    res.send(await School.findByPk((req.params.id)));
+    res.send(await School.findByPk(req.params.id, {include: Student}));
   }
   catch(ex){
     next(ex);
   }
 });
+
+//Gets a students
+// app.get('/api/students/:id', async(req, res, next)=> {
+//   try {
+//     res.send(await Student.findByPk(req.params.id, {include: School}));
+//   }
+//   catch(ex){
+//     next(ex);
+//   }
+// });
 
 // creates school
 app.post('/api/schools', async(req, res, next)=> {
@@ -58,7 +69,7 @@ app.delete('/api/schools/:id', async(req, res, next)=> {
 //Update school
 app.put('/api/schools/:id', async(req, res, next)=> {
   try {
-    const school = await School.findByPk(req.params.id);
+    const school = await School.findByPk(req.params.id, {include: Student});
     res.send(await school.update(req.body));
   }  
   catch(ex){
@@ -76,10 +87,30 @@ app.get('/api/students', async(req, res, next)=> {
     }
 });
 
+// app.get('/api/schools/:id', async(req, res, next)=> {
+//   try {
+//     res.send(await School.findByPk(req.params.id, {include: Student}));
+//   }
+//   catch(ex){
+//     next(ex);
+//   }
+// });
+
+//Gets a students
+app.get('/api/students/:id', async(req, res, next)=> {
+  try {
+    console.log('get a student')
+    res.send(await Student.findByPk(req.params.id, {include: School}));
+  }
+  catch(ex){
+    next(ex);
+  }
+});
+
 //Create student
 app.post('/api/students', async(req, res, next)=> {
     try {
-      res.status(201).send(await Student.create(req.body));
+      res.status(201).send(await Student.create(req.body, {include: School}));
     }
     catch(ex){
       next(ex);
@@ -101,7 +132,7 @@ app.delete('/api/students/:id', async(req, res, next)=> {
 //Update student
 app.put('/api/students/:id', async(req, res, next)=> {
   try {
-    const student = await Student.findByPk(req.params.id);
+    const student = await Student.findByPk(req.params.id, {include: School});
     res.send(await student.update(req.body));
   }  
   catch(ex){

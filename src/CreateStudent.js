@@ -3,10 +3,12 @@ import { connect } from 'react-redux';
 import { createStudent } from './store';
 
 class CreateStudent extends Component{
-    constructor(){
-        super();
+    //there is a better way to just get schools but this works...
+    constructor(props){
+        super(props);
         this.state = {
             name: '',
+            schoolId: '',
             error: ''
         };
         this.onChange = this.onChange.bind(this);
@@ -21,15 +23,26 @@ class CreateStudent extends Component{
        
         ev.preventDefault();
         try {
-             console.log(this.state.name);
-            await this.props.create(this.state.name);
+            //not sure if this is the only way to deal with a null value but it seems to 
+            //work so we will stick with it :)
+            console.log(this.state);
+            if (!this.state.schoolId){  
+                console.log('no school')
+                await this.props.create(this.state.name, null);
+            } else {
+                console.log('has school')
+            await this.props.create(this.state.name, this.state.schoolId);
+            }
+            // await this.props.create(this.state.name, this.state.schoolId);
         }
         catch(ex){
-            this.setState({ error: ex.response.data.error.errors[0].message });
+            // this.setState({ error: ex.response.data.error.errors[0].message });
+            this.setState({ error: ex.response.data });
         }    
     }
     render(){
-        const { name, error } = this.state;
+        //console.log(this.props.schools);
+        const { name, error, schoolId } = this.state;
         const { onChange, onSave } = this;
         return (
             <form onSubmit = { onSave }>
@@ -39,17 +52,38 @@ class CreateStudent extends Component{
                     }
                 </pre>
                 <input name='name' value={ name } onChange = { onChange }/>
-                <button>SAVE</button>
+                <select name='schoolId' value={ schoolId } onChange = { onChange }>
+                    {/* so this need to be linked with the the actual schools and I need to figure 
+                    out how to do the update but one step at a time */}
+                    <option value = ''>-- choose a school</option>
+                    {/* <option value = '1'>schooly d</option>
+                    <option value = '2'>schooly V</option>
+                    <option value = '3'>schooly T</option> */}
+                    {
+                        this.props.schools.map( school => { 
+                                return (
+                                    <option key={ school.id } value = { school.id }>
+                                        { school.name } 
+                                    </option>
+                                );
+                            })
+                    }
+
+                </select>
+                <button disabled = { !name }>SAVE</button>
             </form>
         )
     }
 }
 
+
+
 export default connect(
-    null,
+    state => state,
     (dispatch, { history })=> {
+
         return {
-            create: (name)=> dispatch(createStudent(name, history))
+            create: (name, schoolId) => dispatch(createStudent(name, schoolId, history))
         }
     }
 )(CreateStudent);

@@ -37,7 +37,7 @@ class CreateSchool extends Component{
                     }
                 </pre>
                 <input name='name' value={ name } onChange = { onChange }/>
-                <button>SAVE</button>
+                <button disabled = { !name }>SAVE</button>
             </form>
         )
     }
