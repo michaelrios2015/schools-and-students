@@ -108,13 +108,13 @@ const _createStudent = (student) =>{
 const createStudent = (name, schoolId, history)=>{
     return async(dispatch)=>{
         let student = (await axios.post('/api/students', { name, schoolId })).data;
-        console.log('in thunk');
-        console.log(student);
+        // console.log('in thunk');
+        // console.log(student);
         if (schoolId){
             student = (await axios.get(`/api/students/${student.id}`)).data;
-            console.log(student);
+            // console.log(student);
             const school = (await axios.get(`/api/schools/${schoolId}`)).data;
-            console.log(school);
+            // console.log(school);
             dispatch(_updateSchool(school));    
         }    
         //console.log(schoolsReducer);
@@ -135,8 +135,8 @@ const destroyStudent = (student, history)=>{
         //thunk thing
         if (student.school){
             const school = (await axios.get(`/api/schools/${student.school.id}`)).data;
-            console.log('school');
-            console.log(school);
+            // console.log('school');
+            // console.log(school);
             dispatch(_updateSchool(school));
         }
         history.push('/students')
@@ -199,11 +199,11 @@ const destroySchool = (school, history)=>{
         await axios.delete(`/api/schools/${school.id}`)
         dispatch(_destroySchool(school))
         if (school.students){
-           console.log(school.students);
+        //    console.log(school.students);
             for (let i=0; i<school.students.length; i++){
                 console.log(school.students[i].id);
                 const student = (await axios.get(`/api/students/${school.students[i].id}`)).data;
-                console.log(student);
+                // console.log(student);
                 dispatch(_updateStudent(student))
             }       
         }
@@ -223,7 +223,7 @@ const updateSchool = (id, name, history)=>{
         if (school.students){
             for (let i=0; i<school.students.length; i++){
                 const student = (await axios.get(`/api/students/${school.students[i].id}`)).data;
-                console.log(student);
+                // console.log(student);
                 dispatch(_updateStudent(student))
             }       
         }
