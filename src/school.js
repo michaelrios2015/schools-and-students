@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { destroySchool, takeOutSchoolFromStudent } from './store';
+import { destroySchool } from './store';
 
 
 const School = ({ school, destroy }) =>{
@@ -17,10 +17,12 @@ const School = ({ school, destroy }) =>{
             <header>
                 <h1> SCHOOL </h1>
                 <h2>{ school.name } </h2>
-                {/* { school.address ? 'hello' : " "} */}
-            
-                <h3>!!!students</h3>
+                <hr></hr>
+                { school.address ? `Address: ${ school.address }` : " "}
+                <br />
+                { school.description ? `About our school: ${ school.description }` : " "}
             </header>
+            { school.students.length > 0 ? 'Students' : ' ' }
             <ul>
             {/* there should be some east logic to say no students
             not sure how to format  */}
@@ -35,7 +37,7 @@ const School = ({ school, destroy }) =>{
             }
             </ul>    
             <br />
-            <button onClick={()=>destroy(school)}>Delete</button>
+            <button onClickS={()=>destroy(school)}>Delete</button>
             <br />
             <Link to={`/schools/${school.id}/update`}>Update</Link>
         </div>

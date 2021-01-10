@@ -105,9 +105,9 @@ const _createStudent = (student) =>{
     };
 };
 
-const createStudent = (name, schoolId, history)=>{
+const createStudent = (name, email, gpa, schoolId, history)=>{
     return async(dispatch)=>{
-        let student = (await axios.post('/api/students', { name, schoolId })).data;
+        let student = (await axios.post('/api/students', { name, email, gpa, schoolId })).data;
         // console.log('in thunk');
         // console.log(student);
         if (schoolId){
@@ -146,11 +146,11 @@ const destroyStudent = (student, history)=>{
 const _updateStudent = student =>({ type: UPDATE_STUDENT, student});
 
 
-const updateStudent = (id, name, history)=>{
+const updateStudent = (id, name, email, gpa, schoolId, history)=>{
     return async(dispatch)=>{
-        const student = (await axios.put(`/api/students/${id}`, { name })).data;
-        // console.log('in thunk');
-        // console.log(student);
+        const student = (await axios.put(`/api/students/${id}`, { name, email, gpa, schoolId })).data;
+        console.log('in thunk');
+        console.log(student);
         dispatch(_updateStudent(student));
         if (student.school){
             const school = (await axios.get(`/api/schools/${student.school.id}`)).data;
@@ -184,9 +184,9 @@ const _createSchool = (school) =>{
     };
 };
 
-const createSchool = (name, history)=>{
+const createSchool = (name, address, description, history)=>{
     return async(dispatch)=>{
-        const school = (await axios.post('/api/schools', { name })).data;
+        const school = (await axios.post('/api/schools', { name, address, description })).data;
         dispatch(_createSchool(school));
         history.push(`/schools/${school.id}`)
     }
@@ -213,11 +213,11 @@ const destroySchool = (school, history)=>{
 
 const _updateSchool = school =>({ type: UPDATE_SCHOOL, school});
 
-const updateSchool = (id, name, history)=>{
+const updateSchool = (id, name, address, description, history)=>{
     return async(dispatch)=>{
-        const school = (await axios.put(`/api/schools/${id}`, { name })).data;
+        const school = (await axios.put(`/api/schools/${id}`, { name, address, description })).data;
         // console.log('in update thunk');
-        // console.log(school);
+        console.log(school);
         dispatch(_updateSchool(school));
         //IT WORKS!!!
         if (school.students){
@@ -232,7 +232,5 @@ const updateSchool = (id, name, history)=>{
 }
 
 
-const takeOutSchoolFromStudent = school =>({ type: REMOVE_SCHOOL, school});
-
 export default store;
-export { loaded, loadStudents, destroyStudent, createStudent, updateStudent, loadSchools, createSchool, destroySchool, updateSchool, takeOutSchoolFromStudent};
+export { loaded, loadStudents, destroyStudent, createStudent, updateStudent, loadSchools, createSchool, destroySchool, updateSchool};

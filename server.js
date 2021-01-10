@@ -132,8 +132,11 @@ app.delete('/api/students/:id', async(req, res, next)=> {
 //Update student
 app.put('/api/students/:id', async(req, res, next)=> {
   try {
-    const student = await Student.findByPk(req.params.id, {include: School});
-    res.send(await student.update(req.body));
+    let student = await Student.findByPk(req.params.id);
+    student = await student.update(req.body);
+    console.log(student);
+    student = await Student.findByPk(req.params.id, {include: School});
+    res.send(student);
   }  
   catch(ex){
     next(ex);
@@ -187,11 +190,11 @@ const Student = conn.define('student', {
     validate: {
         notEmpty: true
     } 
-},
-email:  { 
+  },
+  email:  { 
     type: STRING,   
-},
-gpa:{
+  },
+  gpa:{
     type: FLOAT,
     validate: {
         min: 0,
@@ -216,10 +219,10 @@ const syncAndSeed = async()=> {
   ]);
 
   await Promise.all([
-    Student.create({ name: 'One', schoolId: 1 }),
-    Student.create({ name: 'Two', schoolId: 1 }),
-    Student.create({ name: 'Tree', schoolId: 2 }),
-    Student.create({ name: 'Poor', schoolId: 3 }),
+    Student.create({ name: 'One', email: 'email@email.com', gpa: '2', schoolId: 1 }),
+    Student.create({ name: 'Two', email: 'email2@email.com', gpa: '2.5', schoolId: 1 }),
+    Student.create({ name: 'Tree', email: 'email3@email.com', gpa: '3', schoolId: 2 }),
+    Student.create({ name: 'Poor', email: 'email4@email.com', gpa: '3.5', schoolId: 3 }),
     Student.create({ name: 'Pie' }),
     Student.create({ name: 'Six' })
 

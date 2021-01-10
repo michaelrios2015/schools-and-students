@@ -8,6 +8,8 @@ class CreateStudent extends Component{
         super(props);
         this.state = {
             name: '',
+            email: '',
+            gpa: '',
             schoolId: '',
             error: ''
         };
@@ -28,10 +30,10 @@ class CreateStudent extends Component{
             console.log(this.state);
             if (!this.state.schoolId){  
                 console.log('no school')
-                await this.props.create(this.state.name, null);
+                await this.props.create(this.state.name, this.state.email, this.state.gpa, null);
             } else {
                 console.log('has school')
-            await this.props.create(this.state.name, this.state.schoolId);
+            await this.props.create(this.state.name, this.state.email, this.state.gpa, this.state.schoolId);
             }
             // await this.props.create(this.state.name, this.state.schoolId);
         }
@@ -42,7 +44,7 @@ class CreateStudent extends Component{
     }
     render(){
         //console.log(this.props.schools);
-        const { name, error, schoolId } = this.state;
+        const { name, email, gpa, error, schoolId } = this.state;
         const { onChange, onSave } = this;
         return (
             <form onSubmit = { onSave }>
@@ -51,7 +53,12 @@ class CreateStudent extends Component{
                         !!error && JSON.stringify(error, null, 2)
                     }
                 </pre>
+                Name
                 <input name='name' value={ name } onChange = { onChange }/>
+                Email
+                <input name='email' value={ email } onChange = { onChange }/>
+                GPA
+                <input name='gpa' value={ gpa } onChange = { onChange }/>
                 <select name='schoolId' value={ schoolId } onChange = { onChange }>
                     {/* so this need to be linked with the the actual schools and I need to figure 
                     out how to do the update but one step at a time */}
@@ -83,7 +90,7 @@ export default connect(
     (dispatch, { history })=> {
 
         return {
-            create: (name, schoolId) => dispatch(createStudent(name, schoolId, history))
+            create: (name, email, gpa, schoolId) => dispatch(createStudent(name, email, gpa, schoolId, history))
         }
     }
 )(CreateStudent);
