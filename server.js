@@ -163,22 +163,42 @@ const init = async()=> {
 // DATABASE STUFF should be it's own file and then subdivided 
 //But this works for now 
 const Sequelize = require('sequelize');
-const { STRING } = Sequelize;
+const { STRING, FLOAT } = Sequelize;
 const conn = new Sequelize(process.env.DATABASE_URL || 'postgres://postgres:JerryPine@localhost/acme_db');
 
 const School = conn.define('school', {
-  name: {
+  name: { 
     type: STRING,
-    unique: true,
+    allowNull: false,
     validate: {
-      notEmpty: true
-    }
-  } 
+        notEmpty: true
+    } 
+  },
+  address:  { 
+    type: STRING,
+  },
+  description: STRING 
 });
 
 const Student = conn.define('student', {
-    name: STRING 
-  });
+  name: { 
+    type: STRING,
+    allowNull: false,
+    validate: {
+        notEmpty: true
+    } 
+},
+email:  { 
+    type: STRING,   
+},
+gpa:{
+    type: FLOAT,
+    validate: {
+        min: 0,
+        max: 4
+    }
+  }
+});
 
 School.hasMany(Student);
 Student.belongsTo(School);
@@ -190,9 +210,9 @@ Student.belongsTo(School);
 const syncAndSeed = async()=> {
   await conn.sync({ force: true });
   await Promise.all([
-    School.create({ name: 'Moes School' }),
-    School.create({ name: 'Larrys School' }),
-    School.create({ name: 'Lucys School' })
+    School.create({ name: 'Moes School', address: '111 One Way', description: 'too coool!!!' }),
+    School.create({ name: 'Larrys School', address: '222 One Way', description: 'three coool!!!' }),
+    School.create({ name: 'Lucys School', address: '333 One Way', description: 'for coool!!!' })
   ]);
 
   await Promise.all([

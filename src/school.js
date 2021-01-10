@@ -15,9 +15,11 @@ const School = ({ school, destroy }) =>{
     return(
         <div>
             <header>
-            <h1> SCHOOL </h1>
-            <h2>{ school.name } </h2>
-            students
+                <h1> SCHOOL </h1>
+                <h2>{ school.name } </h2>
+                {/* { school.address ? 'hello' : " "} */}
+            
+                <h3>!!!students</h3>
             </header>
             <ul>
             {/* there should be some east logic to say no students
