@@ -59,7 +59,6 @@ class CreateStudent extends Component{
                 <input name='email' value={ email } onChange = { onChange }/>
                 GPA
                 <input name='gpa' value={ gpa } onChange = { onChange }/>
-                gpa most be a number from 0-4, please enter 0 if no gpa exisits future updates will handle this better 
                 <select name='schoolId' value={ schoolId } onChange = { onChange }>
                     <option value = ''>-- choose a school</option>
                     {
