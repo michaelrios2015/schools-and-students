@@ -44,7 +44,7 @@ class CreateSchool extends Component{
                 <input name='address' value={ address } onChange = { onChange }/>
                 Description
                 <input name='description' value={ description } onChange = { onChange }/>
-                <button disabled = { !name }>SAVE</button>
+                <button disabled = { !name || !address }>SAVE</button>
             </form>
         )
     }

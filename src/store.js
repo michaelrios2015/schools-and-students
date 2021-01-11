@@ -7,13 +7,12 @@ const LOADED = 'LOADED';
 
 const LOAD_STUDENTS = 'LOAD_STUDENTS';
 const CREATE_STUDENT = 'CREATE_STUDENT';
-const CREATE_SCHOOL = 'CREATE_SCHOOL';
 const DESTROY_STUDENT = 'DESTROY_STUDENT';
 const UPDATE_STUDENT = 'UPDATE_STUDENT';
 
 const LOAD_SCHOOLS = 'LOAD_SCHOOLS';
+const CREATE_SCHOOL = 'CREATE_SCHOOL';
 const DESTROY_SCHOOL = 'DESTROY_SCHOOL';
-const REMOVE_SCHOOL = 'REMOVE_SCHOOL';
 const UPDATE_SCHOOL = 'UPDATE_SCHOOL'
 
 
@@ -146,7 +145,7 @@ const destroyStudent = (student, history)=>{
 const _updateStudent = student =>({ type: UPDATE_STUDENT, student});
 
 
-const updateStudent = (id, name, email, gpa, schoolId, history)=>{
+const updateStudent = (id, name, email, gpa, schoolId, history, unregister)=>{
     return async(dispatch)=>{
         const student = (await axios.put(`/api/students/${id}`, { name, email, gpa, schoolId })).data;
         console.log('in thunk');
@@ -157,7 +156,16 @@ const updateStudent = (id, name, email, gpa, schoolId, history)=>{
             // console.log(school);
             dispatch(_updateSchool(school));
         }
-        history.push('/students');
+        if (!unregister){
+            history.push('/students');
+        }
+        else{
+            // want it to just reload on the same page but don't know how 
+            // console.log(`/schools/${unregister}`);
+            const school = (await axios.get(`/api/schools/${unregister}`)).data;
+            dispatch(_updateSchool(school));
+            history.push(`/schools/`);
+        }
     }
 }
 

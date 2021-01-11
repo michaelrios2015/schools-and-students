@@ -28,14 +28,14 @@ class CreateStudent extends Component{
             //not sure if this is the only way to deal with a null value but it seems to 
             //work so we will stick with it :)
             console.log(this.state);
-            if (!this.state.schoolId){  
-                console.log('no school')
-                await this.props.create(this.state.name, this.state.email, this.state.gpa, null);
-            } else {
-                console.log('has school')
-            await this.props.create(this.state.name, this.state.email, this.state.gpa, this.state.schoolId);
+            if (this.state.gpa === '') {
+                this.state.gpa = null;
             }
-            // await this.props.create(this.state.name, this.state.schoolId);
+            if (this.state.schoolId === '') {
+                this.state.schoolId = null;
+            }
+            console.log('no school')
+            await this.props.create(this.state.name, this.state.email, this.state.gpa, null);
         }
         catch(ex){
             // this.setState({ error: ex.response.data.error.errors[0].message });
@@ -59,13 +59,9 @@ class CreateStudent extends Component{
                 <input name='email' value={ email } onChange = { onChange }/>
                 GPA
                 <input name='gpa' value={ gpa } onChange = { onChange }/>
+                gpa most be a number from 0-4, please enter 0 if no gpa exisits future updates will handle this better 
                 <select name='schoolId' value={ schoolId } onChange = { onChange }>
-                    {/* so this need to be linked with the the actual schools and I need to figure 
-                    out how to do the update but one step at a time */}
                     <option value = ''>-- choose a school</option>
-                    {/* <option value = '1'>schooly d</option>
-                    <option value = '2'>schooly V</option>
-                    <option value = '3'>schooly T</option> */}
                     {
                         this.props.schools.map( school => { 
                                 return (
@@ -77,7 +73,7 @@ class CreateStudent extends Component{
                     }
 
                 </select>
-                <button disabled = { !name }>SAVE</button>
+                <button disabled = { !name || !email  }>SAVE</button>
             </form>
         )
     }

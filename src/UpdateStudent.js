@@ -72,7 +72,7 @@ class UpdateStudent extends Component{
                     }
 
                 </select>
-                <button disabled = { !name }>SAVE</button>
+                <button disabled = { !name || !email  }>SAVE</button>
             </form>
         )
     }
@@ -90,7 +90,7 @@ export default connect(
     (dispatch, { history })=> {
         return {
             update: (id, name, email, gpa, schoolId)=> {
-                dispatch(updateStudent(id, name, email, gpa, schoolId, history));
+                dispatch(updateStudent(id, name, email, gpa, schoolId, history, null));
             }
         }
     }

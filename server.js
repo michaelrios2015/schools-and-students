@@ -34,16 +34,6 @@ app.get('/api/schools/:id', async(req, res, next)=> {
   }
 });
 
-//Gets a students
-// app.get('/api/students/:id', async(req, res, next)=> {
-//   try {
-//     res.send(await Student.findByPk(req.params.id, {include: School}));
-//   }
-//   catch(ex){
-//     next(ex);
-//   }
-// });
-
 // creates school
 app.post('/api/schools', async(req, res, next)=> {
     try {
@@ -86,15 +76,6 @@ app.get('/api/students', async(req, res, next)=> {
       next(ex);
     }
 });
-
-// app.get('/api/schools/:id', async(req, res, next)=> {
-//   try {
-//     res.send(await School.findByPk(req.params.id, {include: Student}));
-//   }
-//   catch(ex){
-//     next(ex);
-//   }
-// });
 
 //Gets a students
 app.get('/api/students/:id', async(req, res, next)=> {
@@ -166,7 +147,7 @@ const init = async()=> {
 // DATABASE STUFF should be it's own file and then subdivided 
 //But this works for now 
 const Sequelize = require('sequelize');
-const { STRING, FLOAT } = Sequelize;
+const { STRING, FLOAT, TEXT } = Sequelize;
 const conn = new Sequelize(process.env.DATABASE_URL || 'postgres://postgres:JerryPine@localhost/acme_db');
 
 const School = conn.define('school', {
@@ -179,8 +160,12 @@ const School = conn.define('school', {
   },
   address:  { 
     type: STRING,
+    allowNull: false,
+    validate: {
+        notEmpty: true
+    } 
   },
-  description: STRING 
+  description: TEXT 
 });
 
 const Student = conn.define('student', {
@@ -192,10 +177,16 @@ const Student = conn.define('student', {
     } 
   },
   email:  { 
-    type: STRING,   
+    type: STRING,
+    allowNull: false,
+    validate: {
+        notEmpty: true,
+        isEmail: true 
+    }    
   },
   gpa:{
     type: FLOAT,
+    allowNull: true,
     validate: {
         min: 0,
         max: 4
@@ -223,8 +214,8 @@ const syncAndSeed = async()=> {
     Student.create({ name: 'Two', email: 'email2@email.com', gpa: '2.5', schoolId: 1 }),
     Student.create({ name: 'Tree', email: 'email3@email.com', gpa: '3', schoolId: 2 }),
     Student.create({ name: 'Poor', email: 'email4@email.com', gpa: '3.5', schoolId: 3 }),
-    Student.create({ name: 'Pie' }),
-    Student.create({ name: 'Six' })
+    Student.create({ name: 'Pie', email: 'email5@email.com' }),
+    Student.create({ name: 'Six', email: 'email6@email.com' })
 
   ]);
 };

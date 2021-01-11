@@ -7,14 +7,18 @@ import { Link } from 'react-router-dom';
 
 const Nav = ({ schoolsL, studentsL, createSchool, location: { pathname }}) => {
     return (
-
-            <nav>
-                <Link to = '/' className= { pathname === '/' ? 'selected': ''}>Home</Link>
-                <Link to = '/schools' className= { pathname === '/schools' ? 'selected': ''}>Schools ({schoolsL}) </Link>
-                <Link to = '/students' className= { pathname === '/students' ? 'selected': ''}>Students ({studentsL})</Link>
-                <Link to = '/schools/create' className= { pathname === '/schools/create' ? 'selected': ''}>Create a School</Link>
-                <Link to = '/students/create' className= { pathname === '/students/create' ? 'selected': ''}>Create a Student</Link>
-            </nav>
+            <div>
+                <header>
+                    <h1>JPFP</h1>
+                </header>
+                <nav>
+                    <Link to = '/' className= { pathname === '/' ? 'selected': ''}>Home</Link>
+                    <Link to = '/schools' className= { pathname === '/schools' ? 'selected': ''}>Schools ({schoolsL}) </Link>
+                    <Link to = '/students' className= { pathname === '/students' ? 'selected': ''}>Students ({studentsL})</Link>
+                    <Link to = '/schools/create' className= { pathname === '/schools/create' ? 'selected': ''}>Create a School</Link>
+                    <Link to = '/students/create' className= { pathname === '/students/create' ? 'selected': ''}>Create a Student</Link>
+                </nav>
+            </div>
         );
 }
 

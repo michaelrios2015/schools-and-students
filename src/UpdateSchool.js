@@ -55,7 +55,7 @@ class UpdateSchool extends Component{
                 Description
                 <input name='description' value={ description } onChange = { onChange }/>
 
-                <button disabled = { !name }>SAVE</button>
+                <button disabled = { !name || !address }>SAVE</button>
             </form>
         )
     }
@@ -71,7 +71,7 @@ export default connect(
     (dispatch, { history })=> {
         return {
             update: (id, name, address, description)=> {
-                dispatch(updateSchool(id, name, address, description, history));
+                dispatch(updateSchool(id, name, address, description, history, null));
             }
         }
     }

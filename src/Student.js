@@ -9,23 +9,28 @@ const Student = ({ student, destroy }) =>{
     }
     return(
         <div>
-            <h2>{ student.name } </h2>
-            {student.email && `email: ${student.email}` }
-            <br />
-            {student.gpa && `gpa: ${student.gpa}` }
-            {/* { student.email } ---- { student.gpa } */}
-            <br />
-            {student.school && 'Attends: ' }
-            {student.school ? <Link to ={`/schools/${student.school.id}`}>{student.school.name}</Link>: 'NOT ENROLLED' }
-            <br />
-            <button onClick={()=>destroy(student)}>Delete</button>
-            <br />
-            <Link to={`/students/${student.id}/update`}>Update</Link>
+            <header>
+                <h1> STUDENT </h1>
+                <h2>{ student.name } </h2>
+                <hr />
+            </header>
+            <main>
+                <h4>Details</h4>
+                {student.email && `email: ${student.email}` }
+                <br />
+                {student.gpa && `gpa: ${student.gpa}` }
+                {/* { student.email } ---- { student.gpa } */}
+                <p>{student.school && 'Attends: ' }
+                {student.school ? <Link to ={`/schools/${student.school.id}`}>{student.school.name}</Link>: 'Not enrolled in a school' }</p>
+                <br />
+                <button onClick={()=>destroy(student)}>Delete Student</button>
+                <br />
+                <p><Link to={`/students/${student.id}/update`}>Update Student</Link></p>
+            </main>
         </div>
 
         )
 }
-
 
 export default connect(
     (state, otherProps)=> {
@@ -40,11 +45,6 @@ export default connect(
                 destroy: (student)=> {
                     //console.log(student);
                     dispatch(destroyStudent(student, history));
-                    //not how it's actualy supposed to be done will need another dispatch that filers students
-                    //erased students
-                    // dispatch(loadStudents());
-                    //THIS IS HOW IT'S SUPPOSED TO BE DONE I THINK
-                    // dispatch(takeOutSchoolFromStudent(school));
                 }
               
             };
