@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 const Students = ( {students} ) => {
     // console.log(students);
+    
     return(
         <div className = { 'list' }>
             <ul>
@@ -31,7 +32,21 @@ const mapStateToProps = (state)=> {
     return state;
 };
 
-export default connect(mapStateToProps)(Students);
+//call loadStudents here, now need to add a load async
+//nick showed me how to simplfy the logic, don't have time to impliment it but hope to go back to it latter  
+const mapDispatchToProps = (dispatch) => {
+    return {
+      bootstrap: ()=> {
+        //dispatch(loadSchools());
+        
+        dispatch(loadStudents());
+        
+        //dispatch(loaded());
+      }
+    };
+  }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Students);
 
 
 

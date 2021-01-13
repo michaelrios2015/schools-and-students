@@ -164,7 +164,7 @@ const updateStudent = (id, name, email, gpa, schoolId, history, unregister)=>{
             // console.log(`/schools/${unregister}`);
             const school = (await axios.get(`/api/schools/${unregister}`)).data;
             dispatch(_updateSchool(school));
-            history.push(`/schools/`);
+            // history.push(`/schools/`);
         }
     }
 }
@@ -228,13 +228,13 @@ const updateSchool = (id, name, address, description, history)=>{
         console.log(school);
         dispatch(_updateSchool(school));
         //IT WORKS!!!
-        if (school.students){
-            for (let i=0; i<school.students.length; i++){
-                const student = (await axios.get(`/api/students/${school.students[i].id}`)).data;
-                // console.log(student);
-                dispatch(_updateStudent(student))
-            }       
-        }
+        // if (school.students){
+        //     for (let i=0; i<school.students.length; i++){
+        //         const student = (await axios.get(`/api/students/${school.students[i].id}`)).data;
+        //         // console.log(student);
+        //         dispatch(_updateStudent(student))
+        //     }       
+        // }
         history.push('/schools');
     }        
 }

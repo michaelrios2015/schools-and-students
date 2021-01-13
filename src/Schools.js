@@ -25,5 +25,5 @@ const Schools = ({ schools }) =>{
             )
 }
 
-
+//call loadSchools here
 export default connect(state=>state)(Schools);
