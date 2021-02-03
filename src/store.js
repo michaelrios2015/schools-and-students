@@ -157,7 +157,7 @@ const updateStudent = (id, name, email, gpa, schoolId, history, unregister)=>{
             dispatch(_updateSchool(school));
         }
         if (!unregister){
-            history.push('/students');
+            history.push(`/students/${id}`);
         }
         else{
             // want it to just reload on the same page but don't know how 
@@ -206,15 +206,17 @@ const destroySchool = (school, history)=>{
     return async(dispatch)=>{
         await axios.delete(`/api/schools/${school.id}`)
         dispatch(_destroySchool(school))
-        if (school.students){
-        //    console.log(school.students);
-            for (let i=0; i<school.students.length; i++){
-                console.log(school.students[i].id);
-                const student = (await axios.get(`/api/students/${school.students[i].id}`)).data;
-                // console.log(student);
-                dispatch(_updateStudent(student))
-            }       
-        }
+        //nick said this was fine I kind of like mine becasue it seems more effecient but maybe not 
+        dispatch(loadStudents())
+        // if (school.students){
+        // //    console.log(school.students);
+        //     for (let i=0; i<school.students.length; i++){
+        //         console.log(school.students[i].id);
+        //         const student = (await axios.get(`/api/students/${school.students[i].id}`)).data;
+        //         // console.log(student);
+        //         dispatch(_updateStudent(student))
+        //     }       
+        // }
         history.push('/schools')
     }
 }
@@ -227,15 +229,7 @@ const updateSchool = (id, name, address, description, history)=>{
         // console.log('in update thunk');
         console.log(school);
         dispatch(_updateSchool(school));
-        //IT WORKS!!!
-        // if (school.students){
-        //     for (let i=0; i<school.students.length; i++){
-        //         const student = (await axios.get(`/api/students/${school.students[i].id}`)).data;
-        //         // console.log(student);
-        //         dispatch(_updateStudent(student))
-        //     }       
-        // }
-        history.push('/schools');
+        history.push(`/schools/${id}`);
     }        
 }
 

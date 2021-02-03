@@ -82,6 +82,7 @@ app.get('/api/students/:id', async(req, res, next)=> {
   try {
     console.log('get a student')
     res.send(await Student.findByPk(req.params.id, {include: School}));
+    //could use an error hangel if statement
   }
   catch(ex){
     next(ex);
@@ -135,7 +136,7 @@ app.use((err, req, res, next)=>{
 const init = async()=> {
   try {
     await syncAndSeed();
-    const port = process.env.PORT || 3000;
+    const port = process.env.PORT || 3001;
     app.listen(port, ()=> console.log(`listening on port ${port}`));
   }
   catch(ex){
@@ -143,10 +144,11 @@ const init = async()=> {
   }
 };
 
+const { db, models: { Student, School } } = require('./db');
 
 // DATABASE STUFF should be it's own file and then subdivided 
 //But this works for now 
-const Sequelize = require('sequelize');
+/*const Sequelize = require('sequelize');
 const { STRING, FLOAT, TEXT } = Sequelize;
 const conn = new Sequelize(process.env.DATABASE_URL || 'postgres://postgres:JerryPine@localhost/acme_db');
 
@@ -193,7 +195,7 @@ const Student = conn.define('student', {
     }
   }
 });
-
+*/
 School.hasMany(Student);
 Student.belongsTo(School);
 
@@ -202,7 +204,7 @@ Student.belongsTo(School);
 // }
 
 const syncAndSeed = async()=> {
-  await conn.sync({ force: true });
+  await db.sync({ force: true });
   await Promise.all([
     School.create({ name: 'Moes School', address: '111 One Way', description: 'too coool!!!' }),
     School.create({ name: 'Larrys School', address: '222 One Way', description: 'three coool!!!' }),
